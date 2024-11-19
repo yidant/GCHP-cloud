@@ -12,7 +12,7 @@ HeadNode:
     KeyName: <your key pair>
   LocalStorage:
     RootVolume:
-      Size: 50
+      Size: <desired local storage in GB>
       Encrypted: false
       VolumeType: gp3
       Iops: 3000
@@ -23,7 +23,7 @@ SharedStorage:
     Name: FSxExtData
     StorageType: FsxLustre
     FsxLustreSettings:
-      FileSystemId: fs-0c101243d9f93066c
+      FileSystemId: fs-0c101243d9f93066c # shared GEOS-Chem input fsx-storage
 Scheduling:
   Scheduler: slurm
   SlurmQueues:
@@ -32,22 +32,16 @@ Scheduling:
     - Name: c5n9xlarge
       DisableSimultaneousMultithreading: true # Disable hyperthreading
       Instances:
-      - InstanceType: c5n.9xlarge
+      - InstanceType: c5n.9xlarge # 18 cores when disable hyperthreading
       MinCount: 0
-      MaxCount: 50
-      Efa:
-        Enabled: true
+      MaxCount: <desired mamximum node counts>
     - Name: c5n18xlarge
       DisableSimultaneousMultithreading: true # Disable hyperthreading
       Instances:
-      - InstanceType: c5n.18xlarge
+      - InstanceType: c5n.18xlarge # 36 cores when disable hyperthreading
       MinCount: 0
-      MaxCount: 5
-      Efa:
-        Enabled: true
+      MaxCount: <desired mamximum node counts>
     Networking:
-      PlacementGroup:
-        Enabled: true
       SubnetIds: # Include multiple subnet from different availability zones
       - subnet-02b875cdf9e89d396
       - subnet-0bdf63d922ccc97d5
