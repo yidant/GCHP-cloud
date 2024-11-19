@@ -1,0 +1,59 @@
+Region: us-east-1
+Image:
+  Os: alinux2
+  CustomAmi: <the AMI ID you want to use>
+HeadNode:
+  InstanceType: c5n.9xlarge
+  Networking:
+    SubnetId: subnet-02b875cdf9e89d396
+    SecurityGroups:
+      - sg-01dc618b603fcd596
+  Ssh:
+    KeyName: <your key pair>
+  LocalStorage:
+    RootVolume:
+      Size: 50
+      Encrypted: false
+      VolumeType: gp3
+      Iops: 3000
+      Throughput: 125
+      DeleteOnTermination: true
+SharedStorage:
+  - MountDir: /ExtData
+    Name: FSxExtData
+    StorageType: FsxLustre
+    FsxLustreSettings:
+      FileSystemId: fs-0c101243d9f93066c
+Scheduling:
+  Scheduler: slurm
+  SlurmQueues:
+  - Name: queue1
+    ComputeResources:
+    - Name: c5n9xlarge
+      DisableSimultaneousMultithreading: true # Disable hyperthreading
+      Instances:
+      - InstanceType: c5n.9xlarge
+      MinCount: 0
+      MaxCount: 50
+      Efa:
+        Enabled: true
+    - Name: c5n18xlarge
+      DisableSimultaneousMultithreading: true # Disable hyperthreading
+      Instances:
+      - InstanceType: c5n.18xlarge
+      MinCount: 0
+      MaxCount: 5
+      Efa:
+        Enabled: true
+    Networking:
+      PlacementGroup:
+        Enabled: true
+      SubnetIds: # Include multiple subnet from different availability zones
+      - subnet-02b875cdf9e89d396
+      - subnet-0bdf63d922ccc97d5
+      - subnet-083ea5eb398350d58
+      - subnet-0ce9dc36274552ec5
+      - subnet-037a7ba8499f0a08a
+      - subnet-0a9728f1b014cffde
+      SecurityGroups:
+      - sg-00f27eb81ab47d55e
